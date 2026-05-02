@@ -337,7 +337,12 @@ install-lib-manpages: install-man-terminfo install-man-curses \
 
 install-manpages: install-prog-manpages install-lib-manpages
 
-install: install-headers install-libs install-progs install-pcs install-manpages
+install: install-headers install-libs install-progs install-pcs install-manpages install-terminfo
+
+install-terminfo:
+	$(MKDIR) -p $(DESTDIR)$(PREFIX)/local/share
+	cd terminfo && $(TOOL_TIC) -x terminfo -o terminfo.cdb
+	$(INSTALL) -Dm 644 terminfo/terminfo.cdb $(DESTDIR)$(PREFIX)/local/share/terminfo
 
 install-static: install-headers install-progs install-pcs install-stalibs
 install-dynamic: TI_LINKLIB=$(TI_LIBSO)
