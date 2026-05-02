@@ -339,9 +339,9 @@ install-manpages: install-prog-manpages install-lib-manpages
 
 install: install-headers install-libs install-progs install-pcs install-manpages install-terminfo
 
-install-terminfo:
+install-terminfo: $(TOOL_TTIC)
 	$(MKDIR) -p $(DESTDIR)$(PREFIX)/local/share
-	cd terminfo && $(TOOL_TIC) -x terminfo -o terminfo.cdb
+	cd terminfo && ../$(TOOL_TTIC) -x terminfo -o terminfo.cdb
 	$(INSTALL) -Dm 644 terminfo/terminfo.cdb $(DESTDIR)$(PREFIX)/local/share/terminfo
 
 install-static: install-headers install-progs install-pcs install-stalibs
@@ -507,11 +507,6 @@ libterminfo/termcap.c: libterminfo/termcap_hash.c
 CLEANFILES+=libterminfo/hash.c libterminfo/termcap_hash.c \
             libterminfo/compiled_terms.c
 
-# Generate our man pages
-#terminfo.5: genman terminfo.5.in term.h termcap_map.c
-#		@echo "Generating terminfo man pages"
-#		${SCRIPT_ENV} ${HOST_SH} $^ > $@
-
 $(CU_LIBA): $(CU_OBJS)
 	rm -f $@
 	$(AR) crs $@ $^
@@ -571,4 +566,4 @@ ${TERMINFODIR}/terminfo.cdb: $(TOOL_TIC) ${TERMINFODIR}/terminfo
 	install-man-infocmp install-man-tabs install-prog-manpages \
 	install-man-terminfo install-man-curses install-man-panel \
 	install-man-menu install-man-form install-lib-manpages \
-	install-manpages
+	install-manpages install-terminfo
